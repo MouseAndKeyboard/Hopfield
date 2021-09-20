@@ -46,44 +46,43 @@ int main(int argc, char *argv[]) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int I = 1;
-    cin >> I;
-    vec<vec<double>> weights(I, vec<double>(I));
-    vec<double> states(I);
+    int networkSize = 1;
+    int memoryCount = 0; // number of memories
+    int iterationCount = 0; // number of iterations
+    cin >> networkSize >> memoryCount >> iterationCount;
 
+    vec<vec<double>> weights(networkSize, vec<double>(networkSize));
+    vec<double> states(networkSize);
 
-    int N = 0; // number of memories
-    cin >> N;
-    vec<vec<double>> memories(N, vec<double>(I));
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < I; j++) {
+    vec<vec<double>> memories(memoryCount, vec<double>(networkSize));
+    for (int i = 0; i < memoryCount; i++) {
+        for (int j = 0; j < networkSize; j++) {
             cin >> memories[i][j];
         }
     }
 
-    for (int i = 0; i < I; i++) {
-        for (int j = 0; j < I; j++) {
+    for (int i = 0; i < networkSize; i++) {
+        for (int j = 0; j < networkSize; j++) {
             double total = 0;
-            for (int k = 0; k < N; k++) {
+            for (int k = 0; k < memoryCount; k++) {
                 total += memories[k][i] * memories[k][j];
             }
 
-            weights[i][j] = total / N;
+            weights[i][j] = total / memoryCount;
         }
     }
 
-    for (int i = 0; i < I; i++) {
+    for (int i = 0; i < networkSize; i++) {
         cin >> states[i];
     }
 
-    int iterations;
-    cin >> iterations;
-    for (int iteration = 0; iteration < iterations; iteration++) {
-        vec<double> newStates = computeNewStates(states, weights, I);
+    for (int iteration = 0; iteration < iterationCount; iteration++) {
+        vec<double> newStates = computeNewStates(states, weights, networkSize);
 
-        for (int i = 0; i < I; i++) {
-            cout << newStates[i] << "\n";
+        for (int i = 0; i < networkSize; i++) {
+            cout << newStates[i] << " ";
         }
+        cout << "\n";
         states = newStates;
     }
 
