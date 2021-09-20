@@ -31,7 +31,7 @@ The first line will be the result of running one iteration of the network on ini
 # Example
 ## Input
 ```
-16 2 1
+16 2 4
 -1 -1 1 -1 -1 -1 1 -1 1 1 1 1 -1 -1 1 -1
 1 1 -1 -1 1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 1 1 1 -1 1 1 1 -1 1 1 1 1 -1 -1 1 -1
