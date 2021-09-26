@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include "IHopfield.cpp"
 #define endl "\n"
 #define F first
 #define S second
@@ -11,36 +12,65 @@ using namespace std;
 typedef long long ll;
 typedef pair<ll, ll> pii;
 
-double thresholdActivity(double activation) {
-    if (activation >= 0) return 1;
-    else return -1;
-}
+class BinaryHopfield {
+    private:
+        ll networkSize;
+        vec<vec<double>> weights;
 
-vec<double> computeActivations(vec<double> states, vec<vec<double>> weights, int I) {
-    vec<double> activations(I);
-
-    for (int i = 0; i < I; i++) {
-        double sum = 0;
-        for (int j = 0; j < I; j++) {
-            sum += weights[i][j] * states[j];
+        double activity(double activation){
+            if (activation >= 0) return 1;
+            else return -1;
         }
-        activations[i] = sum;
-    }
 
-    return activations;
-}
+        vec<double> computeActivations(vec<double> states) {
+            vec<double> activations(networkSize);
 
-vec<double> computeNewStates(vec<double> oldStates, vec<vec<double>> weights, int I) {
-    vec<double> newStates(I);
+            for (int i = 0; i < networkSize; i++) {
+                double sum = 0;
+                for (int j = 0; j < networkSize; j++) {
+                    sum += weights[i][j] * states[j];
+                }
+                activations[i] = sum;
+            }
 
-    vec<double> activations = computeActivations(oldStates, weights, I);
+            return activations;
+        }
 
-    for (int i = 0; i < I; i++) {
-        newStates[i] = thresholdActivity(activations[i]);
-    }
 
-    return newStates;
-}
+    public:
+        BinaryHopfield(ll networkSize) {
+            this->networkSize = networkSize;
+            vec<vec<double>> weights(networkSize, vec<double>(networkSize));
+            this->weights = weights;
+        }
+
+
+        void learn(vec<vec<double>> memories) {
+            ll memoryCount = memories.size();
+            for (int i = 0; i < networkSize; i++) {
+                for (int j = 0; j < networkSize; j++) {
+                    double total = 0;
+                    for (int k = 0; k < memoryCount; k++) {
+                        total += memories[k][i] * memories[k][j];
+                    }
+
+                    weights[i][j] = total / memoryCount;
+                }
+            }
+        }
+
+        vec<double> evaluate(vec<double> input) {
+            vec<double> newStates(networkSize);
+
+            vec<double> activations = computeActivations(input);
+
+            for (int i = 0; i < networkSize; i++) {
+                newStates[i] = this->activity(activations[i]);
+            }
+
+            return newStates;
+        }
+};
 
 int main(int argc, char *argv[]) {
     ios_base::sync_with_stdio(false);
@@ -51,8 +81,8 @@ int main(int argc, char *argv[]) {
     int iterationCount = 0; // number of iterations
     cin >> networkSize >> memoryCount >> iterationCount;
 
-    vec<vec<double>> weights(networkSize, vec<double>(networkSize));
-    vec<double> states(networkSize);
+    BinaryHopfield *hopfield = new BinaryHopfield(networkSize);
+
 
     vec<vec<double>> memories(memoryCount, vec<double>(networkSize));
     for (int i = 0; i < memoryCount; i++) {
@@ -61,23 +91,16 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    for (int i = 0; i < networkSize; i++) {
-        for (int j = 0; j < networkSize; j++) {
-            double total = 0;
-            for (int k = 0; k < memoryCount; k++) {
-                total += memories[k][i] * memories[k][j];
-            }
+    hopfield->learn(memories);
 
-            weights[i][j] = total / memoryCount;
-        }
-    }
+    vec<double> states(networkSize);
 
     for (int i = 0; i < networkSize; i++) {
         cin >> states[i];
     }
 
     for (int iteration = 0; iteration < iterationCount; iteration++) {
-        vec<double> newStates = computeNewStates(states, weights, networkSize);
+        vec<double> newStates = hopfield->evaluate(states);
 
         for (int i = 0; i < networkSize; i++) {
             cout << newStates[i] << " ";
