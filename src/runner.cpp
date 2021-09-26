@@ -55,6 +55,7 @@ void RunContinuousHopfield() {
     int iterationCount = 0; // number of iterations
     cin >> networkSize >> memoryCount >> iterationCount;
 
+
     ContinuousHopfield *hopfield = new ContinuousHopfield(networkSize, 0.5);
 
     vec<vec<double>> memories(memoryCount, vec<double>(networkSize));
@@ -94,7 +95,7 @@ int main(int argc, char *argv[]) {
 
     if (strcmp(argv[1], "binary") == 0) {
         RunBinaryHopfield();
-    } else if (strcmp(argv[1], "continuous")) {
+    } else if (strcmp(argv[1], "continuous") == 0) {
         RunContinuousHopfield();
     }
 
