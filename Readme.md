@@ -11,7 +11,7 @@ cd ./src && g++ hopfield.cpp -o hopfield
 
 # Tool usage
 ```
-./hopfield
+./hopfield [binary/continuous]
 ```
 
 First line: `I (0 < I)`, `N (0 <= N)`, `T (0 < T)`.
