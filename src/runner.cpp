@@ -57,7 +57,6 @@ void RunContinuousHopfield() {
 
     ContinuousHopfield *hopfield = new ContinuousHopfield(networkSize, 0.5);
 
-
     vec<vec<double>> memories(memoryCount, vec<double>(networkSize));
     for (int i = 0; i < memoryCount; i++) {
         for (int j = 0; j < networkSize; j++) {

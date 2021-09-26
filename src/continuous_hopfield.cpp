@@ -54,7 +54,7 @@ class ContinuousHopfield {
                         total += memories[k][i] * memories[k][j];
                     }
 
-                    weights[i][j] = total / memoryCount;
+                    weights[i][j] = total;
                 }
             }
         }
