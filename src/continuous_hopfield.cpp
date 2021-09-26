@@ -17,7 +17,7 @@ class ContinuousHopfield {
         vec<vec<double>> weights;
         double gain;
 
-        double activity(double gain, double activation){
+        double activity(double activation){
             return tanh(gain * activation);
         }
 
